@@ -1,0 +1,22 @@
+{
+  "name": "chatterbox",
+  "version": "1.0.0",
+  "description": "Using WebSockets to turn a text request into audio for the browser client",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch --env-file=.env --no-warnings=ExperimentalWarning src/server.ts",
+    "check": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "openai": "^6.15.0",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
