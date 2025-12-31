@@ -7,8 +7,14 @@ A simple web-client and server that uses websockets and allows you to send text,
 The project is written in JavaScript/TypeScript with Node.js for the server and Vanilla TypeScript/JavaScript for the client.  
 
 It uses [Socket IO](https://socket.io/) for server and client to avoid a lot of boilerplate code for handling websocket connections.  
+
 The server uses raw Node libs with TypeScript configuration and wraps up the Socket functionality in a modular structure.
-The client side uses [Parcel](https://parceljs.org/) for zero configuration and fast development with live reloading, etc.  I avoided using React for the UI to keep things simple and lightweight, but for making things more modular and testable, I would probably consider this route.  For a work-in-progress example React project with tests, see [the 'typescript' branch of my 'Volca' project](https://github.com/glenpike/volca/tree/typescript)
+
+The client side uses [Parcel](https://parceljs.org/) for zero configuration and fast development with live reloading, etc.  
+
+I avoided using React for the UI to keep things simple and lightweight, but for making things more modular and testable, I would probably consider this route.  For a work-in-progress example React project with tests, see [the 'typescript' branch of my 'Volca' project](https://github.com/glenpike/volca/tree/typescript)
+
+I also avoided using Express to combine and serve the client code, just to keep development lighter and more straightforward.
 
 ## Features
 
@@ -18,6 +24,8 @@ The client side uses [Parcel](https://parceljs.org/) for zero configuration and 
 - Simple and intuitive interface
 
 ## Getting Started
+
+Make sure you have NodeJS installed on your system.  The .tool-versions file is specifying `nodejs 24.12.0`, so use a version manager like `nvm` or `asdf`, etc. to install that version.
 
 1. Clone the repository
 2. Install dependencies for both the server and client: `cd server && npm install && cd ../client && npm install`
