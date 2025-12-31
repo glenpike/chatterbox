@@ -1,0 +1,22 @@
+{
+  "name": "chatterbox-client",
+  "version": "1.0.0",
+  "description": "Browser client for taking a prompt and generating speech audio",
+  "license": "MIT",
+  "author": "Glen Pike",
+  "type": "module",
+  "scripts": {
+    "start": "parcel -p 3000 src/index.html",
+    "build": "parcel build src/index.html",
+    "clean": "rm -rf dist .parcel-cache",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "parcel": "^2.16.3",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.3"
+  }
+}
