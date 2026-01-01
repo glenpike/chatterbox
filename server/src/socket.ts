@@ -1,3 +1,9 @@
+/**
+ * A wrapper interface for Socket IO's WebSocket 'server'
+ * 
+ * Provides an abstraction to send and receive messages from sockets.
+ */
+
 import { Server as SocketIOServer, Socket } from "socket.io";
 
 export type Responder = (eventName: string, data: any) => void;

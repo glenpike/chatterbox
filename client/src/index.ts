@@ -1,12 +1,16 @@
+/**
+ * Simple Web client for Chatterbox.
+ * 
+ * This client connects to the Chatterbox server via Socket.IO and provides
+ * a simple text-based interface for sending messages and receiving audio responses.
+ * We setup the basic Socket communication here and delegate managing the UI to a module.
+*/
 
 import { io } from "socket.io-client";
 import {
-  disableTextInput,
-  enableTextInput,
-  initializeTextInput,
-  resetTextInput,
-  toggleThinking,
-  setErrorMessage
+  initializeUI,
+  setUIState,
+  UIState
 } from "./ui.ts";
 import { playAudio } from "./audio.ts";
 
@@ -14,27 +18,22 @@ import { playAudio } from "./audio.ts";
 const socket = io("http://localhost:8080");
 
 socket.on("connect", () => {
-  enableTextInput();
+  initializeUI(sendMessageHandler);
 });
 
 socket.on("disconnect", () => {
-  disableTextInput();
+  setUIState(UIState.DISABLED);
 });
 
-socket.on("audio", (data: ArrayBuffer | string) => {
-  toggleThinking(false);
+socket.on("audio", async (data: ArrayBuffer | string) => {
   if (data instanceof ArrayBuffer) {
-    playAudio(data, () => {
-      resetTextInput();
-    })
+    await playAudio(data);
+    setUIState(UIState.READY_FOR_INPUT);
   } else {
-    setErrorMessage(`The server responded with an error: '${data}'`);
-    resetTextInput();
+    setUIState(UIState.ERROR, `The server responded with an error: '${data}'`);
   }
 });
 
-const textInputListener = (message: string) => {
+const sendMessageHandler = (message: string) => {
   socket.emit("message", message);
 }
-
-initializeTextInput(textInputListener);

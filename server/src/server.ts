@@ -1,3 +1,11 @@
+/**
+ * Main HTTP and WebSocket server entry point
+ * Sets up the Socket wrapper and integrates with our OpenAI wrapper.
+ * When a message is received from the client, it delegates to
+ * the OpenAI wrapper and returns the audio to the client, or an
+ * error if that was encountered
+ */
+
 import { createServer, Server } from "http";
 import { setupSocketServer, type Listener, type SocketServerApiFn } from "./socket.ts";
 import OpenAI from "openai";

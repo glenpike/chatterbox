@@ -1,3 +1,10 @@
+/**
+ * UI module for managing the chat interface.
+ * Handles input, buttons, thinking indicator, and error messages.
+ * Provides a narrow interface for initializing, setting the state
+ * and listening for when the user wants to send a message.
+ */
+
 const messageInput = document.getElementById("message-input") as HTMLInputElement;
 const sendButton = document.getElementById("send-button") as HTMLButtonElement;
 const toggleThinkingIndicator = document.getElementById("thinking-indicator") as HTMLParagraphElement;
@@ -18,46 +25,68 @@ messageInput.addEventListener("keyup", (event) => {
   }
 });
 
-export const toggleThinking = (show: boolean) => {
+const toggleThinking = (show: boolean) => {
   toggleThinkingIndicator.style.display = show ? "block" : "none";
 };
 
-export const toggleError = (show: boolean) => {
+const toggleError = (show: boolean) => {
   if (!show) {
     errorMessageElement.textContent = "";
   }
   errorMessageElement.style.display = show ? "block" : "none";
 };
 
-export const resetTextInput = () => {
+const resetTextInput = () => {
   messageInput.value = "";
   toggleThinking(false);
   messageInput.disabled = false;
+  sendButton.disabled = true;
 };
 
-export const disableTextInput = () => {
+const disableUI = () => {
   messageInput.disabled = true;
   sendButton.disabled = true;
 };
 
-export const enableTextInput = () => {
-  messageInput.disabled = false;
-  sendButton.disabled = true;
-};
-
-export const setErrorMessage = (message: string) => {
+const showErrorMessage = (message: string) => {
   errorMessageElement.textContent = message;
   errorMessageElement.style.display = "block";
 };
 
-export const initializeTextInput = (clickHandler: (message: string) => void) => {
-  disableTextInput();
-  sendButton.addEventListener("click", () => {
-    toggleThinking(true);
-    disableTextInput();
-    clickHandler(messageInput.value);
-  });
+export enum UIState {
+  DISABLED,
+  READY_FOR_INPUT,
+  SENDING_TEXT,
+  ERROR,
 }
 
-disableTextInput()
-toggleThinking(false);
+export const setUIState = (state: UIState, errorMessage?: string) => {
+  switch (state) {
+    case UIState.DISABLED:
+      disableUI();
+      toggleThinking(false);
+      break;
+    case UIState.READY_FOR_INPUT:
+      resetTextInput();
+      break;
+    case UIState.SENDING_TEXT:
+      toggleThinking(true);
+      disableUI();
+      break;
+    case UIState.ERROR:
+      showErrorMessage(errorMessage || "Unknown error occurred");
+      resetTextInput();
+      break;
+  }
+};
+
+export const initializeUI = (sendMessageHandler: (message: string) => void) => {
+  sendButton.addEventListener("click", () => {
+    setUIState(UIState.SENDING_TEXT);
+    sendMessageHandler(messageInput.value);
+  });
+
+  setUIState(UIState.READY_FOR_INPUT);
+}
+
+setUIState(UIState.DISABLED);

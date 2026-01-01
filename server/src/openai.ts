@@ -1,4 +1,14 @@
-import OpenAI from "openai";
+/**
+ * Simple wrapper for OpenAI rest calls.
+ * Because we want to mock OpenAI library for
+ * testing, we inject it as a dependency.
+ * 
+ * The wrapper provides an interface to send text to 
+ * OpenAI, receive a text response, then turn this into
+ * audio using the speech API.
+ * 
+ * Has very simple error handling to demonstrate the concept.
+ */
 
 export interface OpenAIStub {
   responses: {

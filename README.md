@@ -16,20 +16,13 @@ I avoided using React for the UI to keep things simple and lightweight, but for 
 
 I also avoided using Express to combine and serve the client code, just to keep development lighter and more straightforward.
 
-## Features
-
-- Real-time chat via WebSockets
-- Text-to-speech synthesis using OpenAI TTS
-- Browser-based audio playback
-- Simple and intuitive interface
-
 ## Getting Started
 
 Make sure you have NodeJS installed on your system.  The .tool-versions file is specifying `nodejs 24.12.0`, so use a version manager like `nvm` or `asdf`, etc. to install that version.
 
 1. Clone the repository
 2. Install dependencies for both the server and client: `cd server && npm install && cd ../client && npm install`
-3. Set up environment variables for the server:  Create a file called `.env` and add an OpenAI API key like `OPENAI_API_KEY=your_api_key_here` (see `.env.test` for an example).
+3. Set up environment variables for the server:  Create and save a file called `.env` in the `server` directory and add a valid OpenAI API key like `OPENAI_API_KEY=your_actual_openai_api_key_here` (see `.env.test` for an example).
 4. Start the server in a terminal: `cd server && npm start`
 5. Start the client in another terminal: `cd client && npm start`
 6. Open `http://localhost:3000` in your browser to access the client (The server runs on Port 8080)
