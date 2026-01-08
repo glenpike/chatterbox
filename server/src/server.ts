@@ -22,8 +22,9 @@ const openAIWrapper = new OpenAIWrapper(new OpenAI({
 const socketReady: SocketServerApiFn = ({ responder, addListener }) => {
   const textInputListener: Listener = async (message: string) => {
     try {
-      const audio = await openAIWrapper.getSpeechResponse(message);
-      responder('audio', audio);
+      await openAIWrapper.getSpeechResponse(message, (audio: ArrayBuffer, index: number) => {
+        responder('audio', { audio, index });
+      });
     } catch (error: any) {
       responder('audio', error.message);
     }

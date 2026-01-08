@@ -8,6 +8,11 @@
 
 const audioContext = new AudioContext();
 
+let audioQueue: ArrayBuffer[] = [];
+
+let playing = false;
+let index = 0;
+
 export const playAudio = async (audio: ArrayBuffer): Promise<void> => {
   const buffer = await audioContext.decodeAudioData(audio);
   const source = audioContext.createBufferSource();
@@ -18,4 +23,31 @@ export const playAudio = async (audio: ArrayBuffer): Promise<void> => {
   return new Promise((resolve) => {
     source.onended = () => resolve();
   })
+};
+
+export const startAudio = async (onFinished: () => void): Promise<void> => {
+  if (!playing) {
+    playing = true;
+    index = 0;
+    while (index < audioQueue.length) {
+      await playAudio(audioQueue[index]);
+      index++;
+    }
+    playing = false;
+    onFinished();
+  }
+
+  return new Promise(() => { });
+}
+
+export const resetAudioQueue = () => {
+  audioQueue = [];
+}
+
+export const addAudioToQueue = (audio: ArrayBuffer, index: number) => {
+  if (audioQueue[index]) {
+    console.log("Audio queue index ", index, " already exists");
+    return;
+  }
+  audioQueue[index] = audio;
 };

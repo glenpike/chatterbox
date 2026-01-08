@@ -51,17 +51,31 @@ class OpenAIWrapper {
     return await mp3.arrayBuffer();
   }
 
-
-  async getSpeechResponse(input: string): Promise<ArrayBuffer> {
+  async getSpeechResponse(input: string, onChunk: (chunk: ArrayBuffer, index: number) => void): Promise<void> {
     try {
       const textResponse = await this.getChatResponse(input);
       console.log("text response:", textResponse);
-      return await this.getAudioResponse(textResponse);
+      const chunks = this.splitTextResponse(textResponse);
+      let index = 0;
+      for (const chunk of chunks) {
+        if (chunk.trim() === "") {
+          continue;
+        }
+        const audioResponse = await this.getAudioResponse(chunk);
+        onChunk(audioResponse, index++);
+      }
     } catch (error: any) {
       const message = errors[error.status as keyof typeof errors] || unknownError;
       console.log("OpenAI error:", error);
       throw new Error(message);
     }
+  }
+
+  splitTextResponse(input: string): string[] {
+    // Find the next sentence after a certain length
+
+    let chunks: string[] = input.split(".");
+    return chunks;
   }
 }
 

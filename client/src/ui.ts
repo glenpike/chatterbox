@@ -10,6 +10,14 @@ const sendButton = document.getElementById("send-button") as HTMLButtonElement;
 const toggleThinkingIndicator = document.getElementById("thinking-indicator") as HTMLParagraphElement;
 const errorMessageElement = document.getElementById("error-message") as HTMLParagraphElement;
 
+const thinkingMessages: string[] = [
+  "Thinking...",
+  "Hmm, this is a tricky one...",
+  "I'm not sure about this one - it's a tough question!",
+  "Can I call a friend?"
+];
+let interval: NodeJS.Timeout;
+
 messageInput.addEventListener("input", () => {
   toggleError(false);
   if (messageInput.value.trim() !== "") {
@@ -53,10 +61,23 @@ const showErrorMessage = (message: string) => {
   errorMessageElement.style.display = "block";
 };
 
+const startThinking = () => {
+  interval = setInterval(() => {
+    toggleThinkingIndicator.textContent = thinkingMessages[Math.floor(Math.random() * thinkingMessages.length)];
+  }, 2000);
+}
+
+const stopThinking = () => {
+  if (interval) {
+    clearInterval(interval);
+  }
+}
+
 export enum UIState {
   DISABLED,
   READY_FOR_INPUT,
   SENDING_TEXT,
+  PLAYING_AUDIO,
   ERROR,
 }
 
@@ -68,10 +89,16 @@ export const setUIState = (state: UIState, errorMessage?: string) => {
       break;
     case UIState.READY_FOR_INPUT:
       resetTextInput();
+      stopThinking();
       break;
     case UIState.SENDING_TEXT:
       toggleThinking(true);
+      startThinking();
       disableUI();
+      break;
+    case UIState.PLAYING_AUDIO:
+      stopThinking();
+      toggleThinking(false);
       break;
     case UIState.ERROR:
       showErrorMessage(errorMessage || "Unknown error occurred");

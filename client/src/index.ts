@@ -12,7 +12,7 @@ import {
   setUIState,
   UIState
 } from "./ui.ts";
-import { playAudio } from "./audio.ts";
+import { playAudio, addAudioToQueue, startAudio, resetAudioQueue } from "./audio.ts";
 
 
 const socket = io("http://localhost:8080");
@@ -25,10 +25,15 @@ socket.on("disconnect", () => {
   setUIState(UIState.DISABLED);
 });
 
-socket.on("audio", async (data: ArrayBuffer | string) => {
-  if (data instanceof ArrayBuffer) {
-    await playAudio(data);
-    setUIState(UIState.READY_FOR_INPUT);
+socket.on("audio", async (data: { audio: ArrayBuffer, index: number } | string) => {
+  if (data instanceof Object) {
+    console.log("audio", data);
+    const { audio, index } = data as { audio: ArrayBuffer, index: number };
+    setUIState(UIState.PLAYING_AUDIO);
+    addAudioToQueue(audio, index);
+    await startAudio(() => {
+      setUIState(UIState.READY_FOR_INPUT);
+    });
   } else {
     setUIState(UIState.ERROR, `The server responded with an error: '${data}'`);
   }
